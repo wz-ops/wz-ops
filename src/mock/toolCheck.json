@@ -1,0 +1,43 @@
+{
+  "tools": {
+    "title": "常用工具",
+    "id": 1,
+    "list": [
+      { "id": 1, "new": 0, "name": "bejson", "url": "https://www.wanandroid.com/tools/bejson" },
+      { "id": 2, "new": 0, "name": "Todo", "url": "https://www.wanandroid.com/tools/Todo" },
+      { "id": 3, "new": 0, "name": "OpenApis", "url": "https://www.wanandroid.com/OpenApis" },
+      { "id": 4, "new": 0, "name": "md5&sha", "url": "https://www.wanandroid.com/digit" },
+      { "id": 5, "new": 1, "name": "Google Repo", "url": "https://www.wanandroid.com/maven_pom/index" },
+      { "id": 6, "new": 0, "name": "base64", "url": "https://www.wanandroid.com/tools/base64" },
+      { "id": 7, "new": 0, "name": "urldecode", "url": "https://www.wanandroid.com/tools/decode" },
+      { "id": 8, "new": 0, "name": "二维码", "url": "https://www.wanandroid.com/tools/qrcode" },
+      { "id": 9, "new": 0, "name": "取色器", "url": "https://www.wanandroid.com/tools/color" },
+      { "id": 10, "new": 0, "name": "Android 版本", "url": "https://www.wanandroid.com/blog/show/2791" },
+      { "id": 11, "new": 0, "name": "iconfont", "url": "http://www.iconfont.cn/" },
+      { "id": 12, "new": 0, "name": "tinypng", "url": "https://tinypng.com/" },
+      { "id": 13, "new": 0, "name": "进制转化", "url": "https://www.wanandroid.com/tools/decimal" },
+      { "id": 14, "new": 0, "name": "短链接", "url": "http://dwz.cn/" },
+      { "id": 15, "new": 0, "name": "速查", "url": "http://www.wanandroid.com/article/list/0?cid=398" },
+      { "id": 16, "new": 0, "name": "正则", "url": "http://tool.oschina.net/regex" },
+      { "id": 17, "new": 0, "name": "URLOrder", "url": "http://t.codekk.com/url-order" },
+      { "id": 18, "new": 0, "name": "Studio 3.0.1", "url": "https://www.wanandroid.com/tools/ide" },
+      { "id": 19, "new": 0, "name": "https检测", "url": "https://www.upyun.com/https" },
+      { "id": 20, "new": 1, "name": "草稿记事", "url": "https://www.wanandroid.com/lg/userdraft/show" }
+    ]
+  },
+  "checks": {
+    "title": "速查",
+    "id": 2,
+    "url": "https://www.wanandroid.com/blog/show/",
+    "list": [
+      { "new": 0, "name": "ADB 用法大全", "id": 2310 },
+      { "new": 0, "name": "Activity 生命周期", "id": 2303 },
+      { "new": 0, "name": "Fragment 生命周期", "id": 2304 },
+      { "new": 0, "name": "构建流程", "id": 2241 },
+      { "new": 1, "name": "ascii 码表", "id": 2350 },
+      { "new": 0, "name": "依赖冲突", "id": 2314 },
+      { "new": 0, "name": " Java 字节码", "id": 2277 },
+      { "new": 0, "name": "没找到，反馈新增", "id": 252, "be": true, "url": "https://github.com/hongyangAndroid/wanandroid/issues/252" }
+    ]
+  }
+}

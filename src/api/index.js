@@ -8,7 +8,7 @@ export const getBanner = () => commonAPI('get', '/api/banner/json')
 // 2. 获取 置顶文章列表
 export const getTopArt = () => commonAPI('get', '/api/article/top/json')
 // 3. 获取 文章列表
-export const getArt = (page_size) => commonAPI('get', '/api/article/list/0/json', { page_size })
+export const getArt = (size, page_size) => commonAPI('get', '/api/article/list/' + size + '/json', { page_size })
 // 4. 获取 常用网站
 export const getWebsite = () => commonAPI('get', '/api/friend/json')
 // 5. 获取首页 搜索热词

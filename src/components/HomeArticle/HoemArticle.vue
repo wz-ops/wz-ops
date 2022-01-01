@@ -1,6 +1,7 @@
 <template>
   <ul class="art">
     <li class="clear-fix" v-for="item in artData" :key="item.id">
+      {{ item.id }}
       <div class="art_icon_left">
         <span class="collect" title="收藏"></span>
       </div>
@@ -18,51 +19,10 @@
 </template>
 
 <script>
-import { getArt, getTopArt } from '@/api/index.js'
-import { onMounted, reactive, toRefs, watch } from '@vue/runtime-core'
 export default {
   name: 'HoemArticle',
   // 想使用 setup参数 props, 必须使用 props选项声明接收, 不然 setup参数 props获取不到传过来的值
-  props: ['pageSize'],
-  setup(props) {
-    let artData = reactive([])
-    let { pageSize } = toRefs(props)
-    // 生命周期 挂载钩子
-    onMounted(() => {
-      getArtFun(pageSize.value)
-    })
-    async function getArtFun(size) {
-      // 注意: 一个异步函数 把 async await 后获得的数据返回出去 仍是一个promise对象
-      // 置顶文章
-      let topResult = await getTopArt()
-      // 非置顶文章
-      let result = await getArt(size)
-      // 判断数据是否请求成功
-      if (topResult.status === 200 && result.status === 200) {
-        // 解构赋值 置顶文章
-        let {
-          data: { data: res1 }
-        } = topResult
-        // 解构赋值 非置顶文章
-        let {
-          data: {
-            data: { datas: res }
-          }
-        } = result
-        // 清空原有的数据
-        artData.splice(0, artData.length)
-        // 三点运算符(把置顶与非置顶文章整合到一个数组中)
-        artData.push(...res1, ...res)
-      }
-    }
-    watch(pageSize, async (newVal) => {
-      getArtFun(newVal)
-      console.log(artData)
-    })
-    return {
-      artData
-    }
-  }
+  props: ['artData']
 }
 </script>
 

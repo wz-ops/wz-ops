@@ -1,7 +1,7 @@
 <template>
-  <div class="home">
-    <div class="home_content clear-fix">
-      <div class="home_left">
+  <div class="home container">
+    <div class="home_content container_content clear-fix">
+      <div class="home_left container_content_left">
         <HomeBanner />
         <div class="home_l_content">
           <div class="home_l_left">
@@ -32,7 +32,7 @@
             </div>
           </div>
           <div class="home_r_right">
-            <HoemArticle :pageSize="size">
+            <HoemArticle :artData="artData">
               <template v-slot:bottom_desc="{ item }">
                 <span class="istop">置顶</span>
                 <span class="tag" v-for="(tag, index) in item.tags" :key="index">
@@ -61,11 +61,8 @@
           </div>
         </div>
       </div>
-      <div class="home_right">
-        <form action="">
-          <input type="text" class="home_r_search" placeholder="搜索关键字以空格形式隔开" />
-          <span class="search"></span>
-        </form>
+      <div class="home_right container_content_right">
+        <Search />
         <div class="block user_ops">
           <a href="#" class="btn">本站开放API</a>
           <a href="#" class="btn">待办清单</a>
@@ -116,14 +113,7 @@
             <li><a href="#">赞助本站</a></li>
           </ul>
         </div>
-        <div class="block key mt20">
-          <h2 class="title"><span>搜索热词</span></h2>
-          <ul class="clear-fix key-ul">
-            <li v-for="item in key" :key="item.id">
-              <a :href="rootUrl + '/article/query?k=' + item.name">{{ item.name }}</a>
-            </li>
-          </ul>
-        </div>
+        <SearchKey />
       </div>
     </div>
   </div>
@@ -131,29 +121,31 @@
 </template>
 
 <script>
-// getCurrentInstance 组件实例中通过 getCurrentInstance 获取proxy，再获取全局挂载的实例
-import { getCurrentInstance, onMounted, reactive, ref } from 'vue'
-import { getWebsite, getTools, getChecks, getKey } from '@/api/index.js'
+import { inject, onMounted, reactive, ref, watch } from 'vue'
+import { getWebsite, getTools, getChecks, getArt, getTopArt } from '@/api/index.js'
 import HomeBanner from '@/components/HomeBanner/HomeBanner.vue'
 import HoemArticle from '@/components/HomeArticle/HoemArticle.vue'
 import ToolCheck from '@/components/ToolCheck/ToolCheck.vue'
 import Loading from '@/components/Loading/Loading.vue'
+import Search from '@/components/Search/Search.vue'
+import SearchKey from '@/components/SearchKey/SearchKey.vue'
 export default {
   name: 'Home',
-  components: { HomeBanner, HoemArticle, ToolCheck, Loading },
-  setup() {
-    // 获取全局定义的数据
-    const { proxy } = getCurrentInstance()
-    // 网站根地址
-    const rootUrl = proxy.$rootUrl
+  components: { HomeBanner, HoemArticle, ToolCheck, Loading, Search, SearchKey },
+  emits: ['showTop'],
+  setup(_, { emit }) {
+    let artData = reactive([])
+    let topResult = reactive([])
     // 常用网站的数据
     const websiteLs = reactive([])
     // 工具及速查数据
     const toolCheckList = reactive([])
-    let size = ref(20)
-    // 搜索热词数据
-    const key = reactive([])
+    let pageSize = ref(16)
+    let size = ref(0)
     let loading = ref(true)
+    let len = ref(topResult.length)
+    // 注入 根路径
+    const rootUrl = inject('rootUrl')
     onMounted(() => {
       // 获取常用网站的数据
       getWebsitefun()
@@ -161,8 +153,10 @@ export default {
       getToolsfun()
       // 获取 速查数据
       getChecksfun()
-      // 获取 搜索热词数据
-      getKeyFun()
+      // 获取 普通文章列表
+      getArtFun(0, 16)
+      // 获取置顶文章
+      getTopArtfun()
 
       // 监听页面滚动事件
       window.addEventListener('scroll', () => {
@@ -172,13 +166,27 @@ export default {
         let srollWh = document.documentElement.scrollTop || document.body.scrollTop
         // 获取 文档的高度(获取文档可滚动的高度)
         let docWh = document.documentElement.scrollHeight || document.body.scrollHeight
-        if (Math.ceil(wh + srollWh) === docWh) {
-          console.log(1231)
-          size.value += 5
-          if (size.value > 40) {
-            // 接口问题 // 接口描述只能传 1-40的值,但是 大于 40很多也没错且有数据加载,只是重复而已
-            size.value = 40
+        if (srollWh > 300) {
+          emit('showTop', true)
+        } else {
+          emit('showTop', false)
+        }
+        // console.log(wh + srollWh, docWh)
+        if (Math.abs(wh + srollWh - docWh) < 1) {
+          pageSize.value += 4
+          if (size.value >= 2 && pageSize.value > 40) {
+            pageSize.value = 40
             loading.value = false
+            size.value = 2
+            return
+          }
+          if (pageSize.value > 40) {
+            // 接口问题 // 接口描述只能传 1-40的值,但是 大于 40很多也没错且有数据加载,只是重复而已
+            // pageSize.value = 40
+            // loading.value = false
+            pageSize.value = 20
+            size.value++
+            // loading.value = false
             return
           }
         }
@@ -246,24 +254,65 @@ export default {
         toolCheckList.push(result.data.data)
       }
     }
-    async function getKeyFun() {
-      // 获取 搜索热词数据
-      let result = await getKey()
+    async function getTopArtfun() {
+      // 置顶文章
+      const result = await getTopArt()
       if (result.status === 200) {
-        // 请求成功把数据变成模板可用的响应式数据
-        const {
-          data: { data: res }
+        // 解构赋值 置顶文章
+        let {
+          data: { data: res1 }
         } = result
-        key.push(...res)
+        // 把置顶文章存储到 topResult响应数组中
+        topResult.push(...res1)
+        // 把置顶文章添加在文章列表 的 最前面
+        artData.unshift(...topResult)
       }
     }
+    async function getArtFun(size, pageSize) {
+      let i = 0
+      // 注意: 一个异步函数 把 async await 后获得的数据返回出去 仍是一个promise对象
+      // 非置顶文章
+      let result = await getArt(size, pageSize)
+      // 判断数据是否请求成功
+      if (result.status === 200) {
+        // 解构赋值 非置顶文章
+        let {
+          data: {
+            data: { datas: res }
+          }
+        } = result
+        // 清空原有的数据
+        if (i === size) {
+          artData.splice(len.value, artData.length)
+        } else {
+          i = size
+          len.value = artData.length
+        }
+        // 三点运算符(把置顶与非置顶文章整合到一个数组中)
+        artData.push(...res)
+        // 去除重复
+        for (let i = 0; i < artData.length; i++) {
+          for (let j = i + 1; j < artData.length; j++) {
+            if (artData[i].id == artData[j].id) {
+              //第一个等同于第二个，splice方法删除第二个
+              artData.splice(j, 1)
+              j--
+            }
+          }
+        }
+      }
+    }
+    watch([size, pageSize], async (newVal) => {
+      getArtFun(newVal[0], newVal[1])
+    })
     return {
       rootUrl,
+      artData,
       websiteLs,
       toolCheckList,
-      key,
+      loading,
       size,
-      loading
+      pageSize
     }
   }
 }
@@ -282,18 +331,18 @@ export default {
   }
 }
 .home {
-  width: 100%;
-  height: 100%;
-  margin-top: 30px;
+  // width: 100%;
+  // height: 100%;
+  // margin-top: 30px;
   .home_content {
-    width: 1260px;
-    max-width: 1260px;
-    margin: 0 auto;
+    // width: 1260px;
+    // max-width: 1260px;
+    // margin: 0 auto;
     // background: gold;
     .home_left {
-      width: 73%;
-      margin-right: 2%;
-      float: left;
+      // width: 73%;
+      // margin-right: 2%;
+      // float: left;
       .home_l_content {
         width: 100%;
         .home_l_left {
@@ -364,39 +413,8 @@ export default {
       }
     }
     .home_right {
-      width: 25%;
-      float: left;
-      form {
-        width: 99%;
-        position: relative;
-        height: 33px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        background-color: #fafafa;
-        border: 1px solid #dadada;
-        .home_r_search {
-          width: 178px;
-          padding-left: 10px;
-          border-radius: 10px;
-          background-color: #fafafa;
-          box-sizing: border-box;
-          height: 33px;
-          line-height: 33px;
-          outline: none;
-          &::placeholder {
-            font-size: 14px;
-          }
-        }
-        .search {
-          width: 40px;
-          height: 100%;
-          position: absolute;
-          right: 0;
-          top: 0;
-          cursor: pointer;
-          background: url('../../assets/img/search_icon.svg') no-repeat center center;
-        }
-      }
+      // width: 25%;
+      // float: left;
       .user_ops {
         padding: 10px;
         .btn {
@@ -432,20 +450,6 @@ export default {
       }
       .contact {
         .ls();
-      }
-      .key {
-        .key-ul {
-          margin-top: 10px;
-          li {
-            float: left;
-            margin: 8px 10px;
-            > a {
-              font-size: 14px;
-              color: #3367d6;
-              text-decoration: underline;
-            }
-          }
-        }
       }
     }
   }

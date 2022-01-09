@@ -32,9 +32,12 @@
             </div>
           </div>
           <div class="home_r_right">
-            <HoemArticle :artData="artData">
+            <Article :artData="artData" :ml="true">
+              <template v-slot:fresh="{ item }">
+                <span class="fresh" v-if="item.fresh">新</span>
+              </template>
               <template v-slot:bottom_desc="{ item }">
-                <span class="istop">置顶</span>
+                <span class="istop" v-if="item.type">置顶</span>
                 <span class="tag" v-for="(tag, index) in item.tags" :key="index">
                   <a href="">{{ tag.name }}</a>
                 </span>
@@ -57,7 +60,7 @@
                   <a :href="rootUrl + '/article/' + item.id + '/detail'" :title="item.title">...</a>
                 </div>
               </template>
-            </HoemArticle>
+            </Article>
           </div>
         </div>
       </div>
@@ -113,7 +116,7 @@
             <li><a href="#">赞助本站</a></li>
           </ul>
         </div>
-        <SearchKey />
+        <SearchKey title="搜索热词" />
       </div>
     </div>
   </div>
@@ -121,77 +124,40 @@
 </template>
 
 <script>
-import { inject, onMounted, reactive, ref, watch } from 'vue'
+import { inject, reactive } from 'vue'
 import { getWebsite, getTools, getChecks, getArt, getTopArt } from '@/api/index.js'
+import usescrollLoad from '@/hooks/usescrollLoad.js'
 import HomeBanner from '@/components/HomeBanner/HomeBanner.vue'
-import HoemArticle from '@/components/HomeArticle/HoemArticle.vue'
+import Article from '@/components/Article/Article.vue'
 import ToolCheck from '@/components/ToolCheck/ToolCheck.vue'
 import Loading from '@/components/Loading/Loading.vue'
 import Search from '@/components/Search/Search.vue'
 import SearchKey from '@/components/SearchKey/SearchKey.vue'
 export default {
   name: 'Home',
-  components: { HomeBanner, HoemArticle, ToolCheck, Loading, Search, SearchKey },
-  emits: ['showTop'],
+  components: { HomeBanner, Article, ToolCheck, Loading, Search, SearchKey },
+  emits: ['showFooter'],
   setup(_, { emit }) {
-    let artData = reactive([])
+    // let artData = reactive([])
     let topResult = reactive([])
+    // 导入 hook (一个跟下拉加载 相关联 的函数)
+    let { loading, artData } = usescrollLoad({ emit, callback: getArt })
     // 常用网站的数据
     const websiteLs = reactive([])
     // 工具及速查数据
     const toolCheckList = reactive([])
-    let pageSize = ref(16)
-    let size = ref(0)
-    let loading = ref(true)
-    let len = ref(topResult.length)
     // 注入 根路径
     const rootUrl = inject('rootUrl')
-    onMounted(() => {
-      // 获取常用网站的数据
-      getWebsitefun()
-      // 获取 常用工具数据
-      getToolsfun()
-      // 获取 速查数据
-      getChecksfun()
-      // 获取 普通文章列表
-      getArtFun(0, 16)
-      // 获取置顶文章
-      getTopArtfun()
-
-      // 监听页面滚动事件
-      window.addEventListener('scroll', () => {
-        // 获取可视区域的高度
-        let wh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-        // 获取被卷去的文档的高度
-        let srollWh = document.documentElement.scrollTop || document.body.scrollTop
-        // 获取 文档的高度(获取文档可滚动的高度)
-        let docWh = document.documentElement.scrollHeight || document.body.scrollHeight
-        if (srollWh > 300) {
-          emit('showTop', true)
-        } else {
-          emit('showTop', false)
-        }
-        // console.log(wh + srollWh, docWh)
-        if (Math.abs(wh + srollWh - docWh) < 1) {
-          pageSize.value += 4
-          if (size.value >= 2 && pageSize.value > 40) {
-            pageSize.value = 40
-            loading.value = false
-            size.value = 2
-            return
-          }
-          if (pageSize.value > 40) {
-            // 接口问题 // 接口描述只能传 1-40的值,但是 大于 40很多也没错且有数据加载,只是重复而已
-            // pageSize.value = 40
-            // loading.value = false
-            pageSize.value = 20
-            size.value++
-            // loading.value = false
-            return
-          }
-        }
-      })
-    })
+    // 获取常用网站的数据
+    getWebsitefun()
+    // 获取 常用工具数据
+    getToolsfun()
+    // 获取 速查数据
+    getChecksfun()
+    // 获取 普通文章列表
+    // getArtFun(0, 16)
+    // 获取置顶文章
+    getTopArtfun()
     async function getWebsitefun() {
       // 获取常用网站的数据
       const result = await getWebsite()
@@ -268,51 +234,46 @@ export default {
         artData.unshift(...topResult)
       }
     }
-    async function getArtFun(size, pageSize) {
-      let i = 0
-      // 注意: 一个异步函数 把 async await 后获得的数据返回出去 仍是一个promise对象
-      // 非置顶文章
-      let result = await getArt(size, pageSize)
-      // 判断数据是否请求成功
-      if (result.status === 200) {
-        // 解构赋值 非置顶文章
-        let {
-          data: {
-            data: { datas: res }
-          }
-        } = result
-        // 清空原有的数据
-        if (i === size) {
-          artData.splice(len.value, artData.length)
-        } else {
-          i = size
-          len.value = artData.length
-        }
-        // 三点运算符(把置顶与非置顶文章整合到一个数组中)
-        artData.push(...res)
-        // 去除重复
-        for (let i = 0; i < artData.length; i++) {
-          for (let j = i + 1; j < artData.length; j++) {
-            if (artData[i].id == artData[j].id) {
-              //第一个等同于第二个，splice方法删除第二个
-              artData.splice(j, 1)
-              j--
-            }
-          }
-        }
-      }
-    }
-    watch([size, pageSize], async (newVal) => {
-      getArtFun(newVal[0], newVal[1])
-    })
+    // async function getArtFun(size, pageSize) {
+    //   let i = 0
+    //   // 注意: 一个异步函数 把 async await 后获得的数据返回出去 仍是一个promise对象
+    //   // 非置顶文章
+    //   let result = await getArt(size, pageSize)
+    //   // 判断数据是否请求成功
+    //   if (result.status === 200) {
+    //     // 解构赋值 非置顶文章
+    //     let {
+    //       data: {
+    //         data: { datas: res }
+    //       }
+    //     } = result
+    //     // 清空原有的数据
+    //     if (i === size.value) {
+    //       artData.splice(len.value, artData.length)
+    //     } else {
+    //       i = size.value
+    //       len.value = artData.length
+    //     }
+    //     // 三点运算符(把置顶与非置顶文章整合到一个数组中)
+    //     artData.push(...res)
+    //     // 去除重复
+    //     for (let i = 0; i < artData.length; i++) {
+    //       for (let j = i + 1; j < artData.length; j++) {
+    //         if (artData[i].id == artData[j].id) {
+    //           //第一个等同于第二个，splice方法删除第二个
+    //           artData.splice(j, 1)
+    //           j--
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
     return {
       rootUrl,
       artData,
       websiteLs,
       toolCheckList,
-      loading,
-      size,
-      pageSize
+      loading
     }
   }
 }

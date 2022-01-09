@@ -8,11 +8,19 @@
       </div>
       <div class="nav">
         <ul class="clear-fix">
-          <li><a href="" class="active">首页</a></li>
-          <li><a href="">广场</a></li>
+          <!-- <li><a href="" class="">首页</a></li> -->
+          <li>
+            <router-link to="/home">首页</router-link>
+          </li>
+          <!-- <li><a href="">广场</a></li> -->
+          <li>
+            <router-link to="/square">广场</router-link>
+          </li>
           <li><a href="">导航</a></li>
-          <li><a href="">问答</a></li>
-          <li><a href="">体系</a></li>
+          <!-- <li><a href="">问答</a></li> -->
+          <li><router-link to="/ask_answer">问答</router-link></li>
+          <!-- <li><a href="">体系</a></li> -->
+          <li><router-link to="/system">体系</router-link></li>
           <li><a href="">项目</a></li>
           <li><a href="">公众号</a></li>
           <li><a href="">项目分类</a></li>
@@ -55,11 +63,15 @@ export default {
     max-width: 1260px;
     margin: 0 auto;
     .logo a {
+      display: block;
       margin: 0 20px;
+      width: 100px;
       height: 60px;
       float: left;
     }
     .logo a img {
+      width: 68px;
+      height: 50px;
       margin: 5px auto;
     }
     .logo,

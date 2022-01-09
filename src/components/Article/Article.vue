@@ -1,13 +1,12 @@
 <template>
   <ul class="art">
-    <li class="clear-fix" v-for="item in artData" :key="item.id">
-      {{ item.id }}
+    <li class="clear-fix" :class="ml ? 'ml' : ''" v-for="item in artData" :key="item.id">
       <div class="art_icon_left">
         <span class="collect" title="收藏"></span>
       </div>
       <div class="art_center_detail">
         <p>
-          <span class="fresh" v-if="item.fresh">新</span>
+          <slot name="fresh" :item="item"></slot>
           <a :href="item.link">{{ item.title }}</a>
         </p>
         <!-- 定义一个默认插槽 item 传过去的 props -->
@@ -22,7 +21,7 @@
 export default {
   name: 'HoemArticle',
   // 想使用 setup参数 props, 必须使用 props选项声明接收, 不然 setup参数 props获取不到传过来的值
-  props: ['artData']
+  props: ['artData', 'ml']
 }
 </script>
 
@@ -38,8 +37,11 @@ export default {
   li {
     background-color: #fff;
     padding: 20px 30px;
-    margin-left: 20px;
     border-bottom: 1px solid #ccc;
+    // 20px 左边距
+    &.ml {
+      margin-left: 20px;
+    }
     &:hover {
       background-color: rgba(255, 255, 255, 0.6);
     }

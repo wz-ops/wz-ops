@@ -83,7 +83,7 @@
 import Swiper, { Navigation } from 'swiper'
 // configure Swiper to use modules
 Swiper.use([Navigation])
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, onMounted, onBeforeUnmount } from 'vue'
 export default {
   name: 'HomeBanner',
   setup() {
@@ -106,26 +106,28 @@ export default {
     let outTimer
     /* 有4张图片,imgSize比其小1 */
     let imgSize = 3
-    nextTick(() => {
-      // console.dir(myRef.value)
-      // 开启动画
-      ani(imgSize)
+    onMounted(() => {
+      nextTick(() => {
+        // console.dir(myRef.value)
+        // 开启动画
+        ani(imgSize)
 
-      // swiper
-      new Swiper('.swiper', {
-        // swiper 中显示 两个 swiper-slide
-        slidesPerView: 2,
-        // Optional parameters
-        direction: 'vertical',
-        observer: true,
-        observeParents: true,
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
-        },
-        loop: true
-        // 由于我这swiper-slide内有a标签,所以显示不出来
-        // grabCursor: true //开启抓手光标
+        // swiper
+        new Swiper('.swiper', {
+          // swiper 中显示 两个 swiper-slide
+          slidesPerView: 2,
+          // Optional parameters
+          direction: 'vertical',
+          observer: true,
+          observeParents: true,
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+          },
+          loop: true
+          // 由于我这swiper-slide内有a标签,所以显示不出来
+          // grabCursor: true //开启抓手光标
+        })
       })
     })
     // 动画配置
@@ -140,15 +142,15 @@ export default {
           isNow = 0
         }
         // 执行动画
-        animate(leftImgRef.value, { left: -i * Math.floor(617.9) })
+        animate(leftImgRef.value, { left: -i * Math.ceil(643.85) })
         i++
         isNow = i - 1
-      }, 1700)
+      }, 2000)
     }
     // 动画
     function animate(obj, json, fn) {
       // fn 回调函数
-      clearInterval(obj?.timer) // 点击前先清除
+      clearInterval(obj.timer) // 点击前先清除
       obj.timer = setInterval(function () {
         var flag = true // 用来判断是否关闭定时器
         // 遍历
@@ -205,7 +207,7 @@ export default {
         i = 0
       }
       i = i > imgSize ? imgSize : i
-      animate(leftImgRef.value, { left: -i * Math.floor(617.9) })
+      animate(leftImgRef.value, { left: -i * Math.ceil(643.85) })
     }
     // 移入焦点框清除定时器,停止动画
     function mouseoverFocus() {
@@ -217,6 +219,14 @@ export default {
       // console.log(11)
       ani(imgSize)
     }
+    onBeforeUnmount(() => {
+      // 组件卸载前 先 把 动画定时器停止
+      // 组件 一卸载, 所有 DOM 都被清除, 但函数及定时器不会清除 而 我 timer属性挂载在 leftImgRef.value上,
+      // 在用户跳转到别的页面时动画还在进行, 跳转后, 定时器并未关闭,当执行到 animate函数的 clearInterval(obj.timer)
+      // 时, 由于 obj被清除, 即值为 null, 那 null.timer 就 报错...
+      clearInterval(outTimer)
+      clearInterval(leftImgRef.value.timer)
+    })
     return {
       leftImgRef,
       animate,
@@ -288,6 +298,8 @@ export default {
         position: relative;
         float: left;
         .left_img {
+          width: 100%;
+          height: 100%;
           img {
             width: 100%;
             height: 100%;

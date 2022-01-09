@@ -11,6 +11,7 @@ import App from './App.vue'
 const app = createApp(App)
 // 把VueRouter 设置为 createApp 实例的插件
 app.use(router)
-app.mount('#app')
-// Vue3 全局挂载系统名称
+/* Vue3 全局挂载系统名称(注意: 添加全局变量最好在 app.mount('#app') 挂载之前执行,
+ 因为之后添加的话, App组件已被创建且挂载, app实例对象是根据App组件创建的, 故获取不到, 即挂载失败) */
 app.config.globalProperties.$rootUrl = 'https://www.wanandroid.com'
+app.mount('#app')

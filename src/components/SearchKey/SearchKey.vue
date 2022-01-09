@@ -1,6 +1,8 @@
 <template>
   <div class="block key mt20">
-    <h2 class="title"><span>搜索热词</span></h2>
+    <h2 class="title">
+      <span>{{ title }}</span>
+    </h2>
     <ul class="clear-fix key-ul">
       <li v-for="item in key" :key="item.id">
         <a :href="rootUrl + '/article/query?k=' + item.name">{{ item.name }}</a>
@@ -13,6 +15,9 @@ import { inject, reactive } from 'vue'
 import { getKey } from '@/api/index.js'
 export default {
   name: 'SearchKey',
+  props: {
+    title: String
+  },
   setup() {
     // 搜索热词数据
     const key = reactive([])

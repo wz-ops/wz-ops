@@ -7,7 +7,11 @@ const routes = [
   { path: '/home', component: () => import('@/views/Home/Home.vue') },
   { path: '/square', component: () => import('@/views/Square/Square.vue') },
   { path: '/ask_answer', component: () => import('@/views/AskAnswer/AskAnswer.vue') },
-  { path: '/system', component: () => import('@/views/System/System.vue') }
+  { path: '/system', component: () => import('@/views/System/System.vue') },
+  { path: '/project', component: () => import('@/views/Project/Project.vue') },
+  { path: '/the_public', component: () => import('@/views/Public/Public.vue') },
+  { name: 'projectClassification', path: '/project_classification', component: () => import('@/views/ProjectAssort/ProjectAssort.vue') },
+  { path: '/nav', component: () => import('@/views/Nav/Nav.vue') }
 ]
 
 // createRouter 创建 路由实例

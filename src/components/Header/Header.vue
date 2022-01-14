@@ -9,21 +9,21 @@
       <div class="nav">
         <ul class="clear-fix">
           <!-- <li><a href="" class="">首页</a></li> -->
-          <li>
-            <router-link to="/home">首页</router-link>
-          </li>
+          <li><router-link to="/home">首页</router-link></li>
           <!-- <li><a href="">广场</a></li> -->
-          <li>
-            <router-link to="/square">广场</router-link>
-          </li>
-          <li><a href="">导航</a></li>
+          <li><router-link to="/square">广场</router-link></li>
+          <!-- <li><a href="">导航</a></li> -->
+          <li><router-link to="/nav">导航</router-link></li>
           <!-- <li><a href="">问答</a></li> -->
           <li><router-link to="/ask_answer">问答</router-link></li>
           <!-- <li><a href="">体系</a></li> -->
           <li><router-link to="/system">体系</router-link></li>
-          <li><a href="">项目</a></li>
-          <li><a href="">公众号</a></li>
-          <li><a href="">项目分类</a></li>
+          <!-- <li><a href="">项目</a></li> -->
+          <li><router-link to="/project">项目</router-link></li>
+          <!-- <li><a href="">公众号</a></li> -->
+          <li><router-link to="/the_public">公众号</router-link></li>
+          <!-- <li><a href="">项目分类</a></li> -->
+          <li><router-link to="/project_classification">项目分类</router-link></li>
           <li><a href="">工具</a></li>
         </ul>
       </div>

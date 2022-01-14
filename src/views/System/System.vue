@@ -28,7 +28,7 @@
               <a href="">{{ tag.name }}</a>
             </span>
             <span class="author">
-              作者： <a href="#">{{ item.author }}</a>
+              分享人： <a href="#">{{ item.shareUser }}</a>
             </span>
             <span class="achapter">
               分类：

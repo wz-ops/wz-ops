@@ -376,19 +376,6 @@ export default {
     .home_right {
       // width: 25%;
       // float: left;
-      .user_ops {
-        padding: 10px;
-        .btn {
-          display: inline-block;
-          padding: 12px;
-          background-color: #3498db;
-          color: white;
-          margin-right: 12px;
-          margin-bottom: 12px;
-          border-radius: 3px;
-          position: relative;
-        }
-      }
       .user_info {
         .ls();
       }

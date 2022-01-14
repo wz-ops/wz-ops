@@ -121,6 +121,40 @@ export default {
 .show-top {
   display: block;
 }
+.bg_white {
+  background-color: white;
+}
+.container_top {
+  padding: 30px 0;
+  text-align: center;
+  margin-left: 200px;
+  #searchText {
+    width: 40%;
+    height: 32px;
+    outline: none;
+    border: 1px solid #dbe2e8;
+    border-right: none;
+    padding-left: 10px;
+    // 用于解决输入框与模拟按钮对不齐的
+    vertical-align: middle;
+    &:focus {
+      border: 1px solid #2782ef;
+    }
+  }
+  .search_btn {
+    display: inline-block;
+    cursor: pointer;
+    // 用于解决输入框与模拟按钮对不齐的
+    vertical-align: middle;
+    background-color: #2782ef;
+    height: 32px;
+    width: 120px;
+    letter-spacing: 2px;
+    line-height: 32px;
+    border: 1px solid #2782ef;
+    color: #fff;
+  }
+}
 @keyframes opc {
   from {
     opacity: 0;

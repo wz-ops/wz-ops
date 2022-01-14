@@ -21,7 +21,7 @@
       </div>
       <div class="container_content_right">
         <Search />
-        <SearchKey />
+        <SearchKey title="大家都在搜" />
       </div>
     </div>
   </div>

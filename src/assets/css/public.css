@@ -38,3 +38,16 @@
   border-right-color: transparent;
   box-shadow: 0px 0.3125rem 0.3125rem -0.3125rem #565656;
 }
+.user_ops {
+  padding: 10px;
+}
+.user_ops .btn {
+  display: inline-block;
+  padding: 12px;
+  background-color: #3498db;
+  color: white;
+  margin-right: 12px;
+  margin-bottom: 12px;
+  border-radius: 3px;
+  position: relative;
+}

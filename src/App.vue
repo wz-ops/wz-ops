@@ -77,8 +77,8 @@ export default {
 </script>
 <style lang="less">
 .container {
-  width: 100%;
-  height: 100%;
+  // width: 100%;
+  // height: 100%;
   margin-top: 30px;
   .container_content {
     width: 1260px;

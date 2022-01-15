@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 // 路由配置信息
 const routes = [
-  { path: '/', component: () => import('@/views/Home/Home.vue') },
+  { path: '/', redirect: '/home' },
   { path: '/home', component: () => import('@/views/Home/Home.vue') },
   { path: '/square', component: () => import('@/views/Square/Square.vue') },
   { path: '/ask_answer', component: () => import('@/views/AskAnswer/AskAnswer.vue') },
@@ -11,7 +11,8 @@ const routes = [
   { path: '/project', component: () => import('@/views/Project/Project.vue') },
   { path: '/the_public', component: () => import('@/views/Public/Public.vue') },
   { name: 'projectClassification', path: '/project_classification', component: () => import('@/views/ProjectAssort/ProjectAssort.vue') },
-  { path: '/nav', component: () => import('@/views/Nav/Nav.vue') }
+  { path: '/nav', component: () => import('@/views/Nav/Nav.vue') },
+  { path: '/search_detail', component: () => import('@/views/SearchDetail/SearchDetail.vue') }
 ]
 
 // createRouter 创建 路由实例

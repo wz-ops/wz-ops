@@ -1,12 +1,26 @@
 <template>
   <form action="" class="search_form">
-    <input type="text" class="home_r_search" placeholder="搜索关键字以空格形式隔开" />
-    <span class="search"></span>
+    <input type="text" class="home_r_search" placeholder="搜索关键字以空格形式隔开" v-model="key" />
+    <span class="search" @click="startSearch"></span>
   </form>
 </template>
 
 <script>
-export default {}
+import { ref } from 'vue'
+export default {
+  name: 'Search',
+  emits: ['clickSearch'],
+  setup(_, { emit }) {
+    const key = ref('')
+    function startSearch() {
+      emit('clickSearch', key.value)
+    }
+    return {
+      startSearch,
+      key
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

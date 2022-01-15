@@ -28,7 +28,7 @@
               <a href="">{{ tag.name }}</a>
             </span>
             <span class="author">
-              分享人： <a href="#">{{ item.shareUser }}</a>
+              分享人： <a href="#">{{ item.shareUser || item.author }}</a>
             </span>
             <span class="achapter">
               分类：
@@ -41,7 +41,7 @@
         </Article>
       </div>
       <div class="container_content_right" v-if="artData.length">
-        <Search />
+        <Search @clickSearch="earnArt" />
         <SearchKey title="大家都在搜" />
       </div>
     </div>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 // 导入 分类 及 分类文章的 接口
 import { getSystemAssort, getSystemArt } from '@/api/index.js'
 // 导入 下拉加载更多hook
@@ -67,7 +68,17 @@ export default {
   components: { Article, Loading, SearchKey, Search },
   emits: ['showFooter'],
   setup(_, { emit }) {
+    // 创建路由实例
+    const router = useRouter()
     const { loading, assort, secondAssortList, curTwoId, curOneId, artData, showSecondAssort, currentTwoAssort } = usescrollAssortLoad({ emit, callback: getSystemArt, callback1: getSystemAssort })
+    function earnArt(key) {
+      router.replace({
+        path: '/search_detail',
+        query: {
+          key
+        }
+      })
+    }
     return {
       showSecondAssort,
       secondAssortList,
@@ -76,7 +87,8 @@ export default {
       assort,
       curTwoId,
       curOneId,
-      artData
+      artData,
+      earnArt
     }
   }
 }

@@ -1,29 +1,32 @@
 import { onMounted, ref, reactive, onBeforeUnmount } from 'vue'
 
 /* emit: 调用自定义函数, callback => 请求文章数据的函数 */
-export default function usescrollLoad({ emit, callback }) {
+export default function usescrollLoad({ emit, callback, k }) {
   // 控制每页显示的数据数量
   let pageSize = ref(18)
   // 当前页码值
   let size = ref(0)
   // 是否加载
   let loading = ref(true)
+  // 请求回来的文章数据总页数
   let pageCount
   // 文章数据列表
   let artData = reactive([])
+  // 关键字搜索
+  let key = ref(k)
   // 初始时请求数据
-  getArtFun(size.value, pageSize.value)
+  getArtFun(size.value, pageSize.value, key.value)
   onMounted(() => {
     // 监听页面滚动事件
     window.addEventListener('scroll', scrollLoad)
   })
   // 请求文章数据函数
-  async function getArtFun(size, pageSize) {
+  async function getArtFun(size, pageSize, key) {
     // 执行了请求函数, 说明数据还在加载, 故 把 true 传过去,不显示 Footer组件
     emit('showFooter', loading.value)
     // 注意: 一个异步函数 把 async await 后获得的数据返回出去 仍是一个promise对象
     // 非置顶文章
-    let result = await callback(size, pageSize)
+    let result = await callback(size, pageSize, key)
     // 判断数据是否请求成功
     if (result.status === 200) {
       // 解构赋值 非置顶文章
@@ -58,7 +61,7 @@ export default function usescrollLoad({ emit, callback }) {
         return
       }
       size.value++
-      if (loading.value) getArtFun(size.value, pageSize.value)
+      if (loading.value) getArtFun(size.value, pageSize.value, key.value)
     }
   }
   onBeforeUnmount(() => {

@@ -63,3 +63,5 @@ export const getNavList = () => commonAPI('get', '/api/navi/json')
 // 搜索
 // 1. 搜索页面数据(接口有问题)
 // export const getSearchDetailArt = (size, page_size, k) => commonAPI('POST', `/api/article/query/${size}/json`, { page_size, k })
+
+export const getSearchDetailArt = (size, page_size, author) => commonAPI('get', `/api/article/list/${size}/json`, { page_size, author })

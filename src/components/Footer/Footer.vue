@@ -20,7 +20,8 @@ export default {
     // 获取 footer盒子 DOM元素
     const footerRef = ref(null)
     const styPosition = reactive({
-      position: 'fixed',
+      // 应该用粘性定位, 粘性定位是相对定位和固定定位的结合体...
+      position: 'sticky',
       left: 0,
       bottom: 0
     })

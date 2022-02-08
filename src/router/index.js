@@ -12,7 +12,8 @@ const routes = [
   { path: '/the_public', component: () => import('@/views/Public/Public.vue') },
   { name: 'projectClassification', path: '/project_classification', component: () => import('@/views/ProjectAssort/ProjectAssort.vue') },
   { path: '/nav', component: () => import('@/views/Nav/Nav.vue') },
-  { path: '/search_detail', component: () => import('@/views/SearchDetail/SearchDetail.vue') }
+  { path: '/search_detail', component: () => import('@/views/SearchDetail/SearchDetail.vue') },
+  { path: '/tools', component: () => import('@/views/Tool/Tool.vue') }
 ]
 
 // createRouter 创建 路由实例

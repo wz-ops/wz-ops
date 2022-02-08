@@ -18,7 +18,7 @@
           <div class="public_right_art_content">
             <Article :artData="artData">
               <template v-slot:bottom_desc="{ item }">
-                <span class="aniceDate">时间：{{ item.niceShareDate }}</span>
+                <span class="aniceDate">时间：{{ item.niceDate || item.niceShareDate }}</span>
               </template>
             </Article>
             <ElementuiPagination @earnPage="againArt" :artData="artData" :totalPage="totalPage" :total="total" />
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onBeforeUnmount } from 'vue'
 import useelementuipagination from '@/hooks/useelementuipagination.js'
 import { getChapters, getPublicArt, getHistoryPublicArt } from '@/api/index.js'
 import Article from '@/components/Article/Article.vue'
@@ -81,6 +81,10 @@ export default {
     getChaptersFun()
     // 初始化数据
     getPublicArtFun(publicId.value, curPage.value, pageSize.value)
+    onBeforeUnmount(() => {
+      // 卸载前把footer组件隐藏
+      emit('showFooter', true)
+    })
     return {
       teamList,
       artData,

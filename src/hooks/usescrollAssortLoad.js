@@ -141,6 +141,8 @@ export default function usescrollAssortLoad({ emit, callback, callback1 }) {
   onBeforeUnmount(() => {
     // 在组件销毁前也得移除 window身上的滚动事件...
     window.removeEventListener('scroll', scrollLoad)
+    // 卸载前把footer组件隐藏
+    emit('showFooter', true)
   })
   return {
     loading,

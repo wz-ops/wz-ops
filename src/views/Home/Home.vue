@@ -125,7 +125,7 @@
 
 <script>
 import { inject, reactive } from 'vue'
-import { getWebsite, getTools, getChecks, getArt, getTopArt } from '@/api/index.js'
+import { getWebsite, getTools, getChecks, getArt, getTopArt, getLogin } from '@/api/index.js'
 import usescrollLoad from '@/hooks/usescrollLoad.js'
 import HomeBanner from '@/components/HomeBanner/HomeBanner.vue'
 import Article from '@/components/Article/Article.vue'
@@ -158,6 +158,9 @@ export default {
     // getArtFun(0, 16)
     // 获取置顶文章
     getTopArtfun()
+
+    ggg()
+
     async function getWebsitefun() {
       // 获取常用网站的数据
       const result = await getWebsite()
@@ -210,6 +213,19 @@ export default {
       if (result.status === 200) {
         // 把数据变成响应式数据且模板能访问
         toolCheckList.unshift(result.data.data)
+      }
+    }
+    async function ggg() {
+      let data = new FormData()
+      data.append('username', 'android607')
+      data.append('qpassword', 'android607')
+      // 获取 速查数据
+      let result = await getLogin(data)
+      if (result.status === 200) {
+        // 把数据变成响应式数据且模板能访问
+        // toolCheckList.push(result.data.data)
+        console.log(result.headers)
+        console.log(document.cookie)
       }
     }
     async function getChecksfun() {

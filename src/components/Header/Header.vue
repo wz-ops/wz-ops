@@ -24,7 +24,8 @@
           <li><router-link to="/the_public">公众号</router-link></li>
           <!-- <li><a href="">项目分类</a></li> -->
           <li><router-link to="/project_classification">项目分类</router-link></li>
-          <li><a href="">工具</a></li>
+          <!-- <li><a href="">工具</a></li> -->
+          <li><router-link to="/tools">工具</router-link></li>
         </ul>
       </div>
       <div class="nav_login clear-fix">

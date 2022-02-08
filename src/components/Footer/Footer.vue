@@ -21,7 +21,7 @@ export default {
     const footerRef = ref(null)
     const styPosition = reactive({
       // 应该用粘性定位, 粘性定位是相对定位和固定定位的结合体...
-      position: 'sticky',
+      position: 'fixed',
       left: 0,
       bottom: 0
     })

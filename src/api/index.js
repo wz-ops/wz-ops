@@ -55,9 +55,7 @@ export const getProjectAssort = () => commonAPI('get', '/api/project/tree/json')
 export const getProjectAssortArt = ({ cid, size, page_size }) => commonAPI('get', '/api/project/list/' + size + '/json', { page_size, cid })
 
 // 导航
-// 1. 获取 mock 导航分类数
-export const getNavAssort = () => commonAPI('get', '/nav_assort')
-// 2. 导航列表数据
+// 1. 导航列表数据
 export const getNavList = () => commonAPI('get', '/api/navi/json')
 
 // 搜索
@@ -65,3 +63,11 @@ export const getNavList = () => commonAPI('get', '/api/navi/json')
 // export const getSearchDetailArt = (size, page_size, k) => commonAPI('POST', `/api/article/query/${size}/json`, { page_size, k })
 
 export const getSearchDetailArt = (size, page_size, author) => commonAPI('get', `/api/article/list/${size}/json`, { page_size, author })
+
+// 登录
+export const getLogin = (data) => commonAPI('post', '/api/user/login', data)
+// 注册
+// export const getRegister = (password, username, repassword) => commonAPI('post', '/api/user/register', { password, username, repassword })
+
+// 工具
+export const getMeans = () => commonAPI('get', '/means')

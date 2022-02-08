@@ -28,36 +28,32 @@
   </div>
 </template>
 <script>
-import { reactive, ref } from 'vue'
-import { getNavAssort, getNavList } from '@/api/index.js'
+import { reactive, ref, onBeforeUnmount } from 'vue'
+import { getNavList } from '@/api/index.js'
 import Assort from '@/components/Assort/Assort.vue'
 export default {
   name: 'Nav',
   components: { Assort },
-  setup() {
-    const navAssortLs = reactive([])
+  setup(_, { emit }) {
     const navId = ref(10068)
     const navList = reactive([])
-    async function getNavAssortFun() {
-      const result = await getNavAssort()
-      if (result.data.errorcode === 0) {
-        navAssortLs.push(...result.data.datas)
-      }
-    }
     async function getNavListFun() {
       const result = await getNavList()
       if (result.data.errorCode === 0) {
         navList.push(...result.data.data)
+        emit('showFooter', false)
       }
     }
     // 点击导航分类时触发
     function earnArt(id) {
       navId.value = id
     }
-    getNavAssortFun()
     getNavListFun()
+    onBeforeUnmount(() => {
+      // 卸载前把footer组件隐藏
+      emit('showFooter', true)
+    })
     return {
-      navAssortLs,
       navList,
       navId,
       earnArt

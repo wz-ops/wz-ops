@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onBeforeUnmount } from 'vue'
 // 导入 路由
 import { useRoute } from 'vue-router'
 import { getProjectAssort, getProjectAssortArt } from '@/api/index.js'
@@ -73,6 +73,10 @@ export default {
     getProjectAssortFun()
     // 获取项目分类文章数据
     getProjectAssortArtFun()
+    onBeforeUnmount(() => {
+      // 卸载前把footer组件隐藏
+      emit('showFooter', true)
+    })
     return {
       projectAssortLs,
       earnArt,
